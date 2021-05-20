@@ -26,7 +26,7 @@ class _MovieItem extends State<MovieItemView> {
         color: widget.index % (2) == 0 ? Colors.grey[100] : Colors.white,
         child: Row(
           mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
               width: 92,
@@ -36,11 +36,27 @@ class _MovieItem extends State<MovieItemView> {
                 children: <Widget>[
                   Center(child: CircularProgressIndicator()),
                   Center(
-                    child: FadeInImage.memoryNetwork(
-                      width: 92,
-                      placeholder: kTransparentImage,
-                      image: widget.imgUrl,
-                    ),
+                    child: widget.imgUrl == null
+                        ? Container(
+                            color: widget.index % (2) == 0
+                                ? Colors.grey[100]
+                                : Colors.white,
+                            child: Center(
+                              child: Icon(
+                                Icons.image_not_supported,
+                                color: Colors.grey,
+                              ),
+                            ),
+                          )
+                        : ClipRRect(
+                            borderRadius: BorderRadius.circular(7),
+                            child: FadeInImage.memoryNetwork(
+                              width: 92,
+                              placeholder: kTransparentImage,
+                              image:
+                                  "https://image.tmdb.org/t/p/w92${widget.imgUrl}",
+                            ),
+                          ),
                   ),
                 ],
               ),
@@ -53,7 +69,7 @@ class _MovieItem extends State<MovieItemView> {
               mainAxisSize: MainAxisSize.max,
               children: [
                 Container(
-                  padding: EdgeInsets.only(right: 10),
+                  padding: EdgeInsets.only(right: 10, top: 10),
                   child: Text(
                     "${widget.title} (${widget.releaseDate})",
                     textAlign: TextAlign.left,
@@ -70,7 +86,7 @@ class _MovieItem extends State<MovieItemView> {
                     widget.overview,
                     textAlign: TextAlign.justify,
                     overflow: TextOverflow.ellipsis,
-                    maxLines: 7,
+                    maxLines: 6,
                     style: TextStyle(
                         color: Colors.grey[900],
                         fontWeight: FontWeight.normal,

@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
-import 'package:moviedb/cubit/genre_state.dart';
 import 'package:moviedb/data/model/genres.dart';
 import 'package:moviedb/data/model/movies.dart';
 import 'package:moviedb/data/repos/api_repos.dart';

@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:moviedb/cubit/movie_cubit.dart';
 import 'package:moviedb/data/model/genres.dart';
 import 'package:moviedb/data/model/movies.dart';
+import 'package:moviedb/pages/movie_detail_page.dart';
 import 'package:moviedb/pages/widget/movie_item.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
@@ -39,13 +40,11 @@ class _MoviePageState extends State<MoviePage> {
       appBar: AppBar(
         title: Text("Movie List"),
         actions: [
-          Padding(
-              padding: EdgeInsets.only(right: 20.0),
-              child: BlocBuilder<MovieCubit, MovieState>(
-                builder: (context, state) {
-                  return buildAppBarAction();
-                },
-              ))
+          BlocBuilder<MovieCubit, MovieState>(
+            builder: (context, state) {
+              return buildAppBarAction();
+            },
+          )
         ],
       ),
       body: SlidingUpPanel(
@@ -76,10 +75,16 @@ class _MoviePageState extends State<MoviePage> {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.only(right: 10),
+                padding: EdgeInsets.only(right: 10, top: 10),
                 child: Align(
                   alignment: Alignment.bottomRight,
-                  child: TextButton.icon(
+                  child: OutlinedButton.icon(
+                    style: OutlinedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(18.0),
+                      ),
+                      side: BorderSide(width: 2, color: Colors.blue),
+                    ),
                     label: Text("Apply"),
                     onPressed: () {
                       genres = _getSelected();
@@ -146,9 +151,14 @@ class _MoviePageState extends State<MoviePage> {
           var dateTime = dateFormat.parse(data.releaseDate);
           var year = dateFormatParse.format(dateTime);
           return InkWell(
-            onTap: () {},
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => MovieDetailPage(movie: data)));
+            },
             child: MovieItemView(
-                imgUrl: "https://image.tmdb.org/t/p/w92${data.posterPath}",
+                imgUrl: data.posterPath,
                 title: data.title,
                 overview: data.overview,
                 releaseDate: year,
@@ -202,8 +212,6 @@ class _MoviePageState extends State<MoviePage> {
             fontSize: 12,
           ),
           combine: ItemTagsCombine.onlyText,
-          onPressed: (item) => print(item),
-          onLongPressed: (item) => print(item),
         );
       },
     );
@@ -232,7 +240,7 @@ class _MoviePageState extends State<MoviePage> {
   }
 
   final GlobalKey<TagsState> _tagStateKey = GlobalKey<TagsState>();
-  // Allows you to get a list of all the ItemTags
+
   String _getSelected() {
     List<Item> lst = _tagStateKey.currentState?.getAllItem;
     listSelected.clear();
